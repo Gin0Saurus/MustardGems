@@ -94,6 +94,7 @@ public final class FacetGems extends JavaPlugin {
         Theme theme = loadTheme(settings.theme(), allDefs.keySet(), issues);
         gems.apply(defs, tiers, theme, settings, messages);
         restartTasks(settings);
+        for (Player p : getServer().getOnlinePlayers()) gems.restyle(p);
         lastIssues = issues.warnings();
         for (String w : lastIssues) getLogger().warning("Config: " + w);
         return lastIssues;

@@ -199,6 +199,7 @@ public final class GemListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         gems.sweep(List.of(p));
+        gems.restyle(p);
         gems.plugin().sendPack(p);
         if (gems.active(p).isEmpty() && gems.settings().allowFreeStarter()
                 && !gems.plugin().data().usedStarter().contains(p.getUniqueId()) && p.hasPermission("facet.starter")) {

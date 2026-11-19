@@ -191,6 +191,27 @@ public final class GemService {
         for (int i = 1; i < slots.size(); i++) p.getInventory().setItem(slots.get(i), null);
     }
 
+    /**
+     * Re-renders every valid gem and shard a player carries with the current theme and config
+     * (same token, so nothing about ownership changes). Run on join and after /gem reload, so a
+     * theme switch shows up instantly.
+     */
+    public void restyle(Player p) {
+        PlayerInventory inv = p.getInventory();
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack s = inv.getItem(i);
+            if (codec.isShard(s)) {
+                String type = codec.type(s);
+                if (type != null && defs.containsKey(type)) inv.setItem(i, shardItem(type, s.getAmount()));
+                continue;
+            }
+            Token t = codec.token(s);
+            if (t == null || ledger.check(t, p.getUniqueId()) != Ledger.Verdict.VALID) continue;
+            final int slot = i;
+            ledger.get(t.id()).ifPresent(r -> { if (defs.containsKey(r.type())) inv.setItem(slot, gemItem(r)); });
+        }
+    }
+
     public void give(Player p, ItemStack item) {
         Map<Integer, ItemStack> left = p.getInventory().addItem(item);
         for (ItemStack s : left.values()) dropProtected(p.getLocation(), s);
