@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Boots a real Paper server with the plugin, runs the in-server self-test, reloads, stops.
-# Usage: ci/smoke.sh <minecraft-version> <path-to-plugin-jar>
+# Usage: ci/smoke.sh <minecraft-version> <path-to-plugin-jar> [expected-gem-count]
 # Writes ci-server/result.txt = PASS | FAIL | SKIP (no Paper build for that version).
 set -uo pipefail
 
 MC="$1"
 JAR="$(realpath "$2")"
+EXPECT_GEMS="${3:-8}"
 UA="FacetGems-CI (https://github.com/Gin0Saurus/MustardGems)"
 API="https://fill.papermc.io/v3/projects/paper/versions/$MC/builds"
 
@@ -32,7 +33,6 @@ cp "$JAR" plugins/
 echo "eula=true" > eula.txt
 cat > server.properties <<'EOF'
 online-mode=false
-level-type=minecraft\:flat
 generate-structures=false
 spawn-protection=0
 max-players=2
@@ -66,17 +66,37 @@ exec 3>&-
 for i in $(seq 1 120); do kill -0 "$PID" 2>/dev/null || break; sleep 1; done
 kill -9 "$PID" 2>/dev/null || true
 
+# Second boot: corrupt data.yml on purpose. The plugin must still enable and say so clearly.
+if [ -f plugins/FacetGems/data.yml ] || [ -d plugins/FacetGems ]; then
+  printf 'gems: [ {{{ definitely not yaml\n' > plugins/FacetGems/data.yml
+  mv server.log server-1.log
+  rm -f console && mkfifo console
+  java -Xms1G -Xmx2G -jar paper.jar --nogui < console > server.log 2>&1 &
+  PID=$!
+  exec 3>console
+  for i in $(seq 1 240); do grep -q 'Done (' server.log && break; kill -0 "$PID" 2>/dev/null || break; sleep 1; done
+  send "gem selftest" 6
+  send "stop" 1
+  exec 3>&-
+  for i in $(seq 1 120); do kill -0 "$PID" 2>/dev/null || break; sleep 1; done
+  kill -9 "$PID" 2>/dev/null || true
+  mv server.log server-2.log
+  cat server-1.log server-2.log > server.log
+fi
+
 echo "------------------------------------------------------------ relevant log"
 grep -E 'FacetGems|Facet Gems|FACET|\[debug\]|Config:|io\.github\.gin0saurus|Exception|ERROR' server.log | head -200
 
 fail=0
-grep -q 'Facet Gems .* enabled' server.log || { echo "::error::Plugin did not enable on $MC"; fail=1; }
-[ "$(grep -c 'FACET SELFTEST PASS' server.log)" -ge 2 ] || { echo "::error::Self-test did not pass twice on $MC"; fail=1; }
+[ "$(grep -c "Facet Gems .* enabled: $EXPECT_GEMS gems" server.log)" -ge 2 ] || { echo "::error::Plugin did not enable with $EXPECT_GEMS gems on both boots ($MC)"; fail=1; }
+[ "$(grep -c 'FACET SELFTEST PASS' server.log)" -ge 3 ] || { echo "::error::Self-test did not pass 3 times on $MC"; fail=1; }
+grep -q 'data.yml could not be read' server-2.log || { echo "::error::Corrupted data.yml was not reported on $MC"; fail=1; }
+grep -q 'data.yml.broken-' <(ls plugins/FacetGems) || { echo "::error::Corrupted data.yml was not preserved for the owner on $MC"; fail=1; }
 if grep -q 'FACET SELFTEST FAIL' server.log; then
   grep 'FACET SELFTEST FAIL' server.log | while read -r l; do echo "::error::$MC $l"; done
   fail=1
 fi
-if grep -q 'at io\.github\.gin0saurus' server.log; then echo "::error::Stack trace from the plugin on $MC"; fail=1; fi
+if grep -q 'at io\.github\.gin0saurus' server-1.log; then echo "::error::Stack trace from the plugin on $MC"; fail=1; fi
 if grep -qE "Error occurred while enabling FacetGems|Could not load 'plugins/FacetGems" server.log; then echo "::error::Load error on $MC"; fail=1; fi
 if grep -q 'Config: ' server.log; then echo "::error::Shipped config produced warnings on $MC"; fail=1; fi
 

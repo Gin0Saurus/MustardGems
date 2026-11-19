@@ -59,13 +59,13 @@ public final class DataStore {
             y.load(file);
         } catch (IOException | InvalidConfigurationException e) {
             File broken = new File(file.getParentFile(), "data.yml.broken-" + System.currentTimeMillis());
-            log.log(Level.SEVERE, "data.yml could not be read. It was copied to " + broken.getName()
-                + " and the plugin is starting from data.yml.bak if it exists.", e);
+            log.severe("data.yml could not be read (" + e.getMessage().lines().findFirst().orElse("?") + "). It was copied to "
+                + broken.getName() + " and the plugin is starting from data.yml.bak if it exists.");
             try { Files.copy(file.toPath(), broken.toPath()); } catch (IOException ignored) { /* best effort */ }
             File bak = new File(file.getParentFile(), "data.yml.bak");
             if (!bak.exists()) return;
             try { y.load(bak); } catch (IOException | InvalidConfigurationException e2) {
-                log.log(Level.SEVERE, "data.yml.bak is also unreadable; starting with empty data.", e2);
+                log.severe("data.yml.bak is also unreadable (" + e2.getMessage().lines().findFirst().orElse("?") + "); starting with empty data.");
                 return;
             }
         }

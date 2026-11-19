@@ -91,7 +91,53 @@ final class SelfTest {
             check.accept(scratch.check(forged, owner) == Ledger.Verdict.UNKNOWN, "forged token rejected");
         }
 
-        // 5. Abilities and passives resolved on this version.
+        // 5. Permissions: players can play, only ops can administrate.
+        org.bukkit.plugin.PluginManager pm = plugin.getServer().getPluginManager();
+        for (String perm : List.of("facet.use", "facet.attune", "facet.starter")) {
+            org.bukkit.permissions.Permission p = pm.getPermission(perm);
+            check.accept(p != null && p.getDefault() == org.bukkit.permissions.PermissionDefault.TRUE, perm + " defaults to everyone");
+        }
+        org.bukkit.permissions.Permission admin = pm.getPermission("facet.admin");
+        check.accept(admin != null && admin.getDefault() == org.bukkit.permissions.PermissionDefault.OP, "facet.admin defaults to ops only");
+
+        // 6. Save file: round trip, then a corrupted file must fall back to the backup, not crash.
+        java.io.File dir = new java.io.File(plugin.getDataFolder(), "selftest-tmp");
+        try {
+            AtomicLong n2 = new AtomicLong();
+            Ledger a = new Ledger(() -> new UUID(0xDA7A, n2.incrementAndGet()));
+            io.github.gin0saurus.facet.core.Cooldowns cdA = new io.github.gin0saurus.facet.core.Cooldowns(System::currentTimeMillis);
+            Ledger.GemRecord g1 = a.create("strength", 2, owner);
+            Ledger.GemRecord g2 = a.create("fire", 0, null);
+            cdA.start(owner, GemService.CD_ABILITY, 60_000);
+            io.github.gin0saurus.facet.engine.DataStore ds = new io.github.gin0saurus.facet.engine.DataStore(dir, plugin.getLogger(), a, cdA);
+            ds.capUsed(3);
+            ds.write(ds.snapshot());
+            ds.write(ds.snapshot()); // second write creates data.yml.bak
+
+            Ledger b = new Ledger();
+            io.github.gin0saurus.facet.core.Cooldowns cdB = new io.github.gin0saurus.facet.core.Cooldowns(System::currentTimeMillis);
+            io.github.gin0saurus.facet.engine.DataStore back = new io.github.gin0saurus.facet.engine.DataStore(dir, plugin.getLogger(), b, cdB);
+            back.load();
+            check.accept(b.check(g1.token(), owner) == Ledger.Verdict.VALID && b.check(g2.token(), null) == Ledger.Verdict.VALID, "data.yml round trip keeps gems");
+            check.accept(b.activeOf(owner).map(Ledger.GemRecord::tier).orElse(-1) == 2, "data.yml round trip keeps owner + tier");
+            check.accept(cdB.remainingSeconds(owner, GemService.CD_ABILITY) > 50, "data.yml round trip keeps cooldowns");
+            check.accept(back.capUsed() == 3, "data.yml round trip keeps the server cap count");
+
+            java.nio.file.Files.writeString(new java.io.File(dir, "data.yml").toPath(), "gems: [ {{{ not yaml");
+            Ledger c = new Ledger();
+            io.github.gin0saurus.facet.engine.DataStore broken = new io.github.gin0saurus.facet.engine.DataStore(dir, plugin.getLogger(), c,
+                new io.github.gin0saurus.facet.core.Cooldowns(System::currentTimeMillis));
+            broken.load();
+            check.accept(c.check(g1.token(), owner) == Ledger.Verdict.VALID, "corrupted data.yml recovers from data.yml.bak");
+        } catch (Exception e) {
+            fails.add("data store test threw " + e);
+        } finally {
+            java.io.File[] files = dir.listFiles();
+            if (files != null) for (java.io.File f : files) f.delete();
+            dir.delete();
+        }
+
+        // 7. Abilities and passives resolved on this version.
         for (GemDef d : gems.defs().values()) {
             check.accept(d.ability() != null, d.id() + " has an ability");
             check.accept(gems.cooldownSeconds(d, gems.tiers().maxIndex()) >= 1, d.id() + " cooldown at top tier >= 1s");

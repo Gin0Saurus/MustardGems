@@ -49,6 +49,10 @@ jobs:
       fail-fast: false
       matrix:
         mc: ["26.1.2", "26.2", "26.3"]
+        edition: ["full"]
+        include:
+          - mc: "26.2"
+            edition: "free"
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
@@ -59,22 +63,26 @@ jobs:
         with:
           name: jars
           path: jars
-      - name: Boot Paper ${{ matrix.mc }} and run the self-test
+      - name: Boot Paper ${{ matrix.mc }} (${{ matrix.edition }}) and run the self-test
         run: |
           chmod +x ci/smoke.sh
-          JAR=$(ls jars/FacetGems-*.jar | grep -v -- '-Free' | head -1)
-          ci/smoke.sh "${{ matrix.mc }}" "$JAR"
+          if [ "${{ matrix.edition }}" = "free" ]; then
+            JAR=$(ls jars/FacetGems-*-Free.jar | head -1); GEMS=3
+          else
+            JAR=$(ls jars/FacetGems-*.jar | grep -v -- '-Free' | head -1); GEMS=8
+          fi
+          ci/smoke.sh "${{ matrix.mc }}" "$JAR" "$GEMS"
       - name: Record result
         if: always()
         run: |
           r=$(cat ci-server/result.txt 2>/dev/null || echo FAIL)
           on=$(cat ci-server/tested-on.txt 2>/dev/null || echo "${{ matrix.mc }} (no build)")
-          echo "| ${{ matrix.mc }} | $r | $on |" >> $GITHUB_STEP_SUMMARY
-          echo "::notice::Paper ${{ matrix.mc }}: $r ($on)"
+          echo "| ${{ matrix.mc }} | ${{ matrix.edition }} | $r | $on |" >> $GITHUB_STEP_SUMMARY
+          echo "::notice::Paper ${{ matrix.mc }} ${{ matrix.edition }}: $r ($on)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: server-log-${{ matrix.mc }}
+          name: server-log-${{ matrix.mc }}-${{ matrix.edition }}
           path: ci-server/server.log
           if-no-files-found: ignore
 

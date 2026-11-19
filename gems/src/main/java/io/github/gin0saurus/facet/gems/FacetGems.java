@@ -83,15 +83,15 @@ public final class FacetGems extends JavaPlugin {
         Issues issues = new Issues();
         messages.load(this);
         YamlConfiguration gemsYml = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "gems.yml"));
-        Map<String, GemDef> defs = GemDef.load(gemsYml, abilities, issues);
+        Map<String, GemDef> allDefs = GemDef.load(gemsYml, abilities, issues);
+        Map<String, GemDef> defs = allDefs;
         if (isFree()) {
-            Map<String, GemDef> free = new LinkedHashMap<>();
-            for (GemDef d : defs.values()) if (d.freeEdition()) free.put(d.id(), d);
-            defs = free;
+            defs = new LinkedHashMap<>();
+            for (GemDef d : allDefs.values()) if (d.freeEdition()) defs.put(d.id(), d);
         }
         Tiers tiers = Tiers.parse(getConfig().getMapList("tiers.ladder"), issues);
         Settings settings = Settings.read(getConfig(), issues);
-        Theme theme = loadTheme(settings.theme(), defs.keySet(), issues);
+        Theme theme = loadTheme(settings.theme(), allDefs.keySet(), issues);
         gems.apply(defs, tiers, theme, settings, messages);
         restartTasks(settings);
         lastIssues = issues.warnings();
