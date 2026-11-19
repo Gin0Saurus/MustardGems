@@ -10,7 +10,9 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 // Dependency-free test runner (see CoreTests.java). Fails the build on any failing test.
-val coreTests by tasks.registering(JavaExec::class) {
+tasks.test { enabled = false } // no JUnit: CoreTests has its own runner
+
+val coreTests = tasks.register<JavaExec>("coreTests") {
     group = "verification"
     description = "Runs the core rule tests."
     classpath = sourceSets["test"].runtimeClasspath
