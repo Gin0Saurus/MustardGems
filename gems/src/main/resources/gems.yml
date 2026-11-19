@@ -1,0 +1,117 @@
+# =============================================================================
+#  Facet Gems - gems.yml : what each gem DOES.
+#  Ids (strength, speed...) are stored on items and in data.yml - never rename
+#  them. To rename what players see, edit the theme in themes/ instead.
+#
+#  ability          one of: rampage, dash, mend, inferno, gravity_well,
+#                   deep_freeze, village_blessing, static_discharge
+#  cooldown-seconds base cooldown; each tier multiplies it (config.yml tiers)
+#  passives         potion effects while the gem is anywhere in your inventory
+#                   effect = vanilla id (speed, strength, night_vision...)
+#                   amplifier 0 = level I. scales-with-tier adds the tier bonus.
+#  params           numbers the ability reads. Damage/heal are multiplied by the
+#                   tier's magnitude. "...-fraction" = share of the cooldown.
+#  free-edition     included in the free edition build
+# =============================================================================
+gems:
+  strength:
+    ability: rampage
+    cooldown-seconds: 50
+    free-edition: true
+    passives:
+      - { effect: strength, amplifier: 0, scales-with-tier: false }
+    params:
+      duration-fraction: 0.35   # buff lasts this share of the cooldown (never > 90%)
+      strength-amplifier: 0
+      haste-amplifier: 1
+      resistance-amplifier: 0
+
+  speed:
+    ability: dash
+    cooldown-seconds: 18
+    free-edition: true
+    passives:
+      - { effect: speed, amplifier: 0 }
+    params:
+      power: 1.6       # dash strength
+      lift: 0.3
+      damage: 5.0      # to each enemy you dash through
+
+  life:
+    ability: mend
+    cooldown-seconds: 40
+    free-edition: true
+    passives:
+      - { effect: regeneration, amplifier: 0, scales-with-tier: false }
+    params:
+      heal: 6.0        # half-hearts, you + teammates in radius (scoreboard teams)
+      radius: 6.0
+      absorption-amplifier: 0
+      absorption-fraction: 0.5
+
+  fire:
+    ability: inferno
+    cooldown-seconds: 30
+    passives:
+      - { effect: fire_resistance, amplifier: 0, scales-with-tier: false }
+    params:
+      radius: 5.0
+      radius-per-tier: 0.5
+      damage: 6.0
+      burn-seconds: 4
+      knockback: 1.1
+
+  gravity:
+    ability: gravity_well
+    cooldown-seconds: 35
+    passives:
+      - { effect: jump_boost, amplifier: 0, scales-with-tier: false }
+    params:
+      range: 12
+      radius: 6.0
+      radius-per-tier: 0.5
+      pull: 0.35
+      pull-ticks: 40
+      slam-damage: 6.0
+      slam-lift: 0.6
+
+  ice:
+    ability: deep_freeze
+    cooldown-seconds: 35
+    no-fall-damage: true
+    passives:
+      - { effect: resistance, amplifier: 0, scales-with-tier: false }
+    params:
+      radius: 6.0
+      radius-per-tier: 0.5
+      damage: 2.0
+      slow-fraction: 0.15
+      slowness-amplifier: 3
+      weakness-amplifier: 0
+      levitation-amplifier: 20   # sharp launch...
+      levitation-ticks: 40       # ...for 2 seconds
+      spend-on-miss: true
+
+  wealth:
+    ability: village_blessing
+    cooldown-seconds: 180
+    xp-multiplier: 2.0           # passive, grows a little with tier
+    passives:
+      - { effect: hero_of_the_village, amplifier: 4, scales-with-tier: false }
+      - { effect: luck, amplifier: 0 }
+    params:
+      duration-seconds: 10
+      hero-amplifier: 254        # level 255 for the burst
+
+  storm:
+    ability: static_discharge
+    cooldown-seconds: 30
+    passives:
+      - { effect: night_vision, amplifier: 0, scales-with-tier: false }
+    params:
+      radius: 8.0
+      radius-per-tier: 1.0
+      max-targets: 2             # +1 per tier
+      damage: 6.0
+      charge-creepers: true
+      spend-on-miss: false

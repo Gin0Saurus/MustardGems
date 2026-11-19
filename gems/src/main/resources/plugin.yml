@@ -1,0 +1,31 @@
+name: FacetGems
+version: '${version}'
+main: io.github.gin0saurus.facet.gems.FacetGems
+api-version: '26.1'
+description: 'Eight gem powers with tiers, PvP stakes and a server-wide top tier. Themeable.'
+author: Gin0Saurus
+folia-supported: false
+
+commands:
+  gem:
+    description: Your gem - status, upgrade, recover, and admin tools.
+    usage: /gem help
+    aliases: [gems]
+
+permissions:
+  facet.use:
+    description: Use gems, /gem status, upgrade, unbind and recover.
+    default: true
+  facet.attune:
+    description: Right-click an unbound gem to make it yours.
+    default: true
+  facet.starter:
+    description: Claim the one free starter gem with /gem choose.
+    default: true
+  facet.admin:
+    description: Give gems and shards, set tiers, clear, reload, debug.
+    default: op
+    children:
+      facet.use: true
+      facet.attune: true
+      facet.starter: true

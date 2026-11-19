@@ -1,0 +1,106 @@
+# =============================================================================
+#  Theme: Elements (default)
+#  A theme only changes what players SEE. Copy this file to themes/<name>.yml,
+#  edit it, set "theme: <name>" in config.yml and /gem reload.
+#  Text uses MiniMessage: https://docs.advntr.dev/minimessage/format.html
+#  {color} = the gem's colour tag, {name} = the gem's name.
+# =============================================================================
+name: Elements
+
+item-names:
+  gem: "{color}<bold>{name}</bold>"
+  shard: "{color}{name} Shard"
+
+# Item used for shards (all types; colour comes from the name).
+shard-material: prismarine_shard
+
+# Namespace of the item models in the resource pack (only used when the pack is on).
+model-namespace: facet
+
+tiers:
+  rough: "<gray>Rough"
+  cut: "<white>Cut"
+  flawless: "<aqua>Flawless"
+  mythic: "<gradient:#ff6ec7:#a855f7><bold>Mythic</bold></gradient>"
+
+gems:
+  strength:
+    name: Ruby
+    color: "#E0115F"
+    material: red_dye
+    model: strength_gem
+    ability-name: Rampage
+    ability-description: "Strength, Haste and Resistance for a short burst."
+    cast-sound: entity.ravager.roar
+    lore:
+      - "<dark_gray>Hits harder the longer you fight."
+  speed:
+    name: Topaz
+    color: "#FFC87C"
+    material: sugar
+    model: speed_gem
+    ability-name: Windstep
+    ability-description: "Dash forward, hitting everyone in your path."
+    cast-sound: entity.breeze.wind_burst
+    lore:
+      - "<dark_gray>Never the one who gets caught."
+  life:
+    name: Emerald
+    color: "#50C878"
+    material: emerald
+    model: life_gem
+    ability-name: Lifebloom
+    ability-description: "Heal yourself and your team, with a shield on top."
+    cast-sound: block.amethyst_block.resonate
+    lore:
+      - "<dark_gray>Teams are scoreboard teams."
+  fire:
+    name: Sunstone
+    color: "#FF7518"
+    material: blaze_powder
+    model: fire_gem
+    ability-name: Inferno
+    ability-description: "Fire burst that burns and throws back enemies."
+    cast-sound: entity.blaze.shoot
+    lore:
+      - "<dark_gray>Sets people alight, never your base."
+  gravity:
+    name: Onyx
+    color: "#7B5EA7"
+    material: echo_shard
+    model: gravity_gem
+    ability-name: Gravity Well
+    ability-description: "Pull enemies to where you look, then slam them."
+    cast-sound: block.respawn_anchor.charge
+    lore:
+      - "<dark_gray>What goes up comes down hard."
+  ice:
+    name: Sapphire
+    color: "#4FA3FF"
+    material: prismarine_crystals
+    model: ice_gem
+    ability-name: Deep Freeze
+    ability-description: "Freeze nearby enemies and launch them upward."
+    cast-sound: block.glass.break
+    lore:
+      - "<dark_gray>No fall damage while carried."
+  wealth:
+    name: Citrine
+    color: "#E4D00A"
+    material: gold_nugget
+    model: wealth_gem
+    ability-name: Fortune's Favour
+    ability-description: "Villagers practically give their trades away."
+    cast-sound: entity.villager.celebrate
+    lore:
+      - "<dark_gray>Extra XP from everything while carried."
+  storm:
+    name: Amethyst
+    color: "#B07CFF"
+    material: amethyst_shard
+    model: storm_gem
+    ability-name: Thunderstrike
+    ability-description: "Lightning on the nearest enemies. Charges creepers."
+    cast-sound: entity.lightning_bolt.thunder
+    lore:
+      - "<dark_gray>Never strikes villagers."

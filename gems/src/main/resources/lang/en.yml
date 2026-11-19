@@ -1,0 +1,126 @@
+# Facet Gems messages (MiniMessage). Leave a message empty ("") to hide it.
+# Missing keys fall back to the plugin's built-in English, so updates never blank a message.
+prefix: "<dark_gray>[<gradient:#a855f7:#4fa3ff>Gems</gradient>]</dark_gray> "
+no-permission: "<red>You don't have permission to do that."
+players-only: "<red>Only players can do that."
+usage: "<gray>Usage: <white>{usage}"
+
+item:
+  tier-line: "<gray>Tier: {tier}"
+  ability-line: "{color}<bold>Ability:</bold> <white>{ability}"
+  cooldown-line: "<dark_gray>Cooldown: {seconds}s"
+  passive-line: "<gray>• {effect} {level}"
+  xp-line: "<gray>• {multiplier}x XP"
+  no-fall-line: "<gray>• No fall damage"
+  bound-line: "<dark_gray>Bound to {player}"
+  use-hint: "<dark_gray>Right-click to use. /gem for details."
+  unbound-line: "<yellow>Unbound <gray>- right-click to make it yours"
+  shard-lore: "<gray>Used to upgrade {gem}<gray>. <dark_gray>/gem upgrade"
+
+gem:
+  invalid: "<red>That gem was not genuine and has crumbled."
+  already-yours: "<gray>This gem is already yours."
+  unknown-type: "<red>There is no gem called '{type}' on this server."
+  swap-cooldown: "<red>You can attune a new gem in {seconds}s."
+  previous-returned: "<gray>Your old {gem} <gray>is unbound and back in your inventory."
+  attuned: "<green>You attuned {gem}<green>. Right-click it to use its power."
+  attuned-subtitle: "{tier}"
+  none: "<gray>You don't have a gem. <white>/gem choose</white> to pick a free one, or find one."
+  not-carrying: "<red>Your gem isn't in your inventory. Lost it? <white>/gem recover"
+  unbound: "<gray>{gem} <gray>is unbound. Anyone holding it can now attune it."
+  not-yours: "<red>That gem is bound to someone else."
+
+upgrade:
+  max: "<gray>Your gem is already at the highest tier."
+  need-shards: "<red>You need {need} {gem} <red>shards (you have {have})."
+  need-item: "<red>You also need {amount}x {item}."
+  cap-reached: "<red>No more {tier} <red>upgrades are left on this server."
+  done: "<green>{gem} <green>is now {tier}<green>!"
+  broadcast: "<gold>{player} <yellow>has reached {tier} <yellow>with {gem}<yellow>! <gray>({left} left)"
+
+recover:
+  not-needed: "<gray>Your gem is already in your inventory."
+  cooldown: "<red>You can use /gem recover again in {minutes} min."
+  done: "<green>A fresh {gem} <green>has been given to you. Every other copy is now worthless."
+
+starter:
+  disabled: "<red>Free starter gems are disabled on this server."
+  used: "<red>You already claimed your free starter gem."
+  has-gem: "<red>You already have a gem."
+  given: "<green>Here is your {gem}<green>! <gray>Right-click it to attune."
+  prompt: "<gray>You can claim one free gem: <white><click:suggest_command:'/gem choose '>/gem choose <gem></click> <dark_gray>(/gem list)"
+  how: "<gray>Pick one: <white>/gem choose <gem>"
+
+cast:
+  cooldown: ""
+  failed: "<red>That didn't work - please tell an admin (details are in the console)."
+  no-target: "<gray>Nothing in range."
+
+bar:
+  unbound: "<yellow>Unbound gem <gray>- right-click to attune"
+  ready: "{color}{ability} <green>Ready"
+  cooldown: "{color}{ability} <gray>{seconds}s"
+
+protect:
+  no-drop: "<red>You can't drop a bound gem. <gray>/gem unbind first to trade it."
+  no-store: "<red>Bound gems stay in your inventory."
+
+death:
+  dropped: "<red>You dropped your {gem}<red>. Win it back!"
+
+pvp:
+  reward: "<green>+{amount} {gem} <green>shards"
+
+mining:
+  shard: "<aqua>You found a {gem} <aqua>shard!"
+
+help:
+  player: |-
+    <gray>/gem <dark_gray>- your gem and next upgrade</dark_gray>
+    /gem list <dark_gray>- every gem</dark_gray>
+    /gem info <gem> <dark_gray>- details</dark_gray>
+    /gem choose <gem> <dark_gray>- free starter gem</dark_gray>
+    /gem upgrade <dark_gray>- spend shards (hold your gem)</dark_gray>
+    /gem unbind <dark_gray>- make your gem tradeable</dark_gray>
+    /gem recover <dark_gray>- replace a lost gem</dark_gray>
+  admin: |-
+    <gold>/gem give <player> <gem> [tier] <dark_gray>- unbound gem</dark_gray>
+    /gem giveshard <player> <gem> [amount]
+    /gem settier <player> <tier>
+    /gem clear <player> <dark_gray>- destroy their gem</dark_gray>
+    /gem inspect <dark_gray>- check the held gem</dark_gray>
+    /gem reload, /gem debug, /gem selftest
+
+list:
+  header: "<gray>Gems ({theme}):"
+  row: "<dark_gray>• </dark_gray>{gem} <dark_gray>({id})</dark_gray> <gray>- {color}{ability}"
+
+info:
+  header: "{gem}"
+  ability: "{color}{ability}<gray>: {description}"
+  cooldown: "<gray>Cooldown: {base}s <dark_gray>(top tier: {best}s)"
+  passive: "<gray>• {effect} {level}"
+
+status:
+  none: "<gray>You don't have a gem yet."
+  gem: "{gem} <dark_gray>·</dark_gray> {tier} <dark_gray>·</dark_gray> {ready}"
+  cooling: "<gray>{seconds}s"
+  ready: "<green>Ready"
+  missing: "<red>It isn't in your inventory. <white>/gem recover"
+  next: "<gray>Next: {tier} <gray>- shards {have}/{need}{extra}"
+  cap: "<gray>Only <white>{left}</white> left on this server."
+  max: "<gray>Highest tier reached."
+
+admin:
+  reloaded: "<green>Reloaded with no problems."
+  reloaded-issues: "<yellow>Reloaded with {count} problem(s), shown below and in the console."
+  no-player: "<red>{player} is not online."
+  bad-tier: "<red>Unknown tier. Tiers: {tiers}"
+  given: "<green>Gave {player} an unbound {gem}<green>."
+  given-shards: "<green>Gave {player} {amount} {gem} <green>shards."
+  no-gem: "<red>{player} has no gem."
+  tier-set: "<green>{player}'s gem is now {tier}<green>."
+  cleared: "<green>{player}'s gem was destroyed."
+  inspect-none: "<red>Hold a gem to inspect it."
+  inspect: "<gray>Verdict: <white>{verdict}</white> - <dark_gray>{record}"
+  debug-header: "<gray>Copy everything below when asking for support:"

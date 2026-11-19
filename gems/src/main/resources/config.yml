@@ -1,0 +1,113 @@
+# =============================================================================
+#  Facet Gems - config.yml
+#  Apply changes with /gem reload. Every number is checked: a bad value is
+#  clamped and reported in the console (and by /gem reload), never a crash.
+#  What gems DO lives in gems.yml. What they LOOK like lives in themes/.
+# =============================================================================
+
+# Which file in themes/ to use. Ships with: elements, condiments.
+# Changing theme renames and recolours every gem instantly - nobody loses anything.
+theme: elements
+
+gems:
+  # Every new player may claim ONE free starter gem (lowest tier) with /gem choose.
+  # Everything after that is found, fought for or upgraded.
+  allow-free-starter: true
+  # Seconds before a player can attune ANOTHER gem after attuning one.
+  # Cooldowns belong to the player, so swapping gems never resets an ability cooldown.
+  swap-cooldown-seconds: 30
+  # Bound gems cannot be dropped with Q or dragged out of the inventory.
+  prevent-dropping: true
+  # Bound gems cannot go into chests, shulkers, bundles, ender chests, furnaces,
+  # crafting grids, item frames, armor stands or hoppers.
+  prevent-storing: true
+  # On death the gem drops as UNBOUND loot that anyone can pick up and attune.
+  # Respects the keepInventory gamerule (with keepInventory on, nothing drops).
+  # false = gems never leave their owner.
+  drop-on-death: true
+  # /gem recover gives a fresh copy of a lost gem (e.g. after /clear) and makes
+  # every other copy of it worthless. Minutes between uses per player.
+  recover-cooldown-minutes: 10
+
+shards:
+  # Chance that breaking a natural ore drops a random gem's shard.
+  # Ores placed by players never drop shards.
+  mining-drop-chance: 0.04
+
+pvp:
+  # Shards of the victim's gem type paid to the killer: this x the victim's tier
+  # position (1st tier = x1, 2nd = x2 ...). So a top-tier victim pays 4x a starter one.
+  shards-per-kill: 2
+  # Killing the SAME player again within this many minutes pays nothing.
+  # Tracked per killer/victim pair. 0 = no limit.
+  shard-farm-cooldown-minutes: 10
+
+tiers:
+  # How many times a "server-capped" tier can EVER be reached on this server.
+  # Players race for it. -1 = unlimited. Raising it later adds slots, never refunds.
+  server-cap: 20
+  # Lowest first. The first tier is the starting tier (its cost is ignored).
+  #   magnitude            multiplies ability strength (damage, heal, radius scaling...)
+  #   cooldown-multiplier  multiplies the gem's base cooldown (lower = faster)
+  #   amplifier-bonus      extra potion levels on passives and buffs
+  #   upgrade-shards       shards OF THE SAME GEM TYPE needed to reach this tier
+  #   upgrade-item         optional extra item (vanilla id), e.g. nether_star
+  #   server-capped        counts against server-cap above
+  ladder:
+    - id: rough
+      magnitude: 1.0
+      cooldown-multiplier: 1.0
+      amplifier-bonus: 0
+    - id: cut
+      magnitude: 1.3
+      cooldown-multiplier: 0.85
+      amplifier-bonus: 0
+      upgrade-shards: 8
+    - id: flawless
+      magnitude: 1.7
+      cooldown-multiplier: 0.7
+      amplifier-bonus: 1
+      upgrade-shards: 16
+      upgrade-item: diamond_block
+      upgrade-item-amount: 1
+    - id: mythic
+      magnitude: 2.4
+      cooldown-multiplier: 0.55
+      amplifier-bonus: 1
+      upgrade-shards: 32
+      upgrade-item: nether_star
+      upgrade-item-amount: 1
+      server-capped: true
+
+abilities:
+  # Whether abilities can hit players at all. Abilities always go through the
+  # normal damage event, so region/claim/spawn protection plugins still apply.
+  affect-players: true
+  # Whether abilities can hit hostile mobs. Villagers, traders, pets and
+  # passive animals are never targets.
+  affect-mobs: true
+
+effects:
+  particles: true
+  # 0.0 - 2.0. Lower this on busy servers or for players on weak PCs.
+  particle-scale: 1.0
+  # Small coloured particles around a player holding their gem.
+  ambient-particles: true
+  # "Ready" / cooldown countdown above the hotbar while holding your gem.
+  action-bar: true
+
+storage:
+  # data.yml is saved shortly after every ownership change, and also on this timer.
+  autosave-minutes: 5
+  # How often online inventories are checked for duplicated or stale gem items.
+  integrity-check-seconds: 10
+
+# Optional textures. The plugin works without them - gems use vanilla items.
+# See docs/RESOURCE-PACK.md. Host the zip with a DIRECT download link, then
+# paste the url and its sha1 here and set enabled: true.
+resource-pack:
+  enabled: false
+  url: ""
+  sha1: ""
+  prompt: "Gem textures - purely cosmetic."
+  force: false

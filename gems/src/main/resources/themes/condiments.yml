@@ -1,0 +1,77 @@
+# =============================================================================
+#  Theme: Condiments - same eight powers, sauced. Set "theme: condiments".
+# =============================================================================
+name: Condiments
+
+item-names:
+  gem: "{color}<bold>{name}</bold>"
+  shard: "{color}{name} Drop"
+
+shard-material: prismarine_shard
+model-namespace: facet
+
+tiers:
+  rough: "<gray>Mild"
+  cut: "<yellow>Medium"
+  flawless: "<gold>Hot"
+  mythic: "<gradient:#ffdb58:#ff4500><bold>Legendary</bold></gradient>"
+
+gems:
+  strength:
+    name: Mustard
+    color: "#FFDB58"
+    material: glowstone_dust
+    model: strength_gem
+    ability-name: Golden Rampage
+    ability-description: "Strength, Haste and Resistance for a short burst."
+    lore:
+      - "<dark_gray>The king of condiments."
+  speed:
+    name: Ketchup
+    color: "#C21807"
+    material: red_dye
+    model: speed_gem
+    ability-name: Bottle Rocket
+    ability-description: "Dash forward, hitting everyone in your path."
+  life:
+    name: Mayo
+    color: "#F8F3E0"
+    material: bone_meal
+    model: life_gem
+    ability-name: Smooth Recovery
+    ability-description: "Heal yourself and your team, with a shield on top."
+  fire:
+    name: Hot Sauce
+    color: "#E2421F"
+    material: blaze_powder
+    model: fire_gem
+    ability-name: Inferno Burst
+    ability-description: "Fire burst that burns and throws back enemies."
+  gravity:
+    name: BBQ Sauce
+    color: "#8B3A1E"
+    material: cocoa_beans
+    model: gravity_gem
+    ability-name: Gravity Well
+    ability-description: "Pull enemies to where you look, then slam them."
+  ice:
+    name: Ranch
+    color: "#DDEFE8"
+    material: sugar
+    model: ice_gem
+    ability-name: Deep Freeze
+    ability-description: "Freeze nearby enemies and launch them upward."
+  wealth:
+    name: Relish
+    color: "#7BA23F"
+    material: slime_ball
+    model: wealth_gem
+    ability-name: Village Blessing
+    ability-description: "Villagers practically give their trades away."
+  storm:
+    name: Wasabi
+    color: "#8DB600"
+    material: lime_dye
+    model: storm_gem
+    ability-name: Static Discharge
+    ability-description: "Lightning on the nearest enemies. Charges creepers."
