@@ -24,6 +24,7 @@ jobs:
           gradle-version: current
       - name: Compile, run core tests, build jars
         run: |
+          set +e
           set -o pipefail
           gradle --no-daemon --console=plain :core:check :gems:assemble 2>&1 | tee build.log
           status=${PIPESTATUS[0]}
@@ -32,8 +33,8 @@ jobs:
             file="${line%%:*}"; rest="${line#*:}"; ln="${rest%%:*}"; msg="${rest#*: }"
             kind="error"; [[ "$msg" == warning:* ]] && kind="warning"
             echo "::$kind file=${file#$GITHUB_WORKSPACE/},line=$ln::${msg#*: }"
-          done
-          grep -E '^FAIL ' build.log | while IFS= read -r l; do echo "::error::$l"; done
+          done || true
+          grep -E '^FAIL ' build.log | while IFS= read -r l; do echo "::error::$l"; done || true
           exit $status
       - uses: actions/upload-artifact@v4
         with:
